@@ -1,17 +1,17 @@
 # SR-Extractor
 Extractor for .SR archives from Sega Genesis Collection on PlayStation 2
 
-## Who
+### Who
 I made the script. Sega made the game collection.
-## What
+### What
 Sega Genesis Collection stores its assets in an archive format with the .SR extension. Let's pretend that SR standards for "Sega aRchive."
-## When
+### When
 Started the night of September 5, 2018 and robustified the following two days.
-## Where
+### Where
 My house, the Internet, my mind
-## Why
+### Why
 The game has nice menu music that can't be found outside of compressed YouTube rips. I wanted that music.
-## How
+### How
 To use: just run it from the command line.
 ```
 extractor [.SR archive file]
