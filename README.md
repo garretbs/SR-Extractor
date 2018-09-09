@@ -19,4 +19,3 @@ To use: select a .SR archive file and click the extract button. A folder named a
 * The .ICO file has some of the proper ICO header. Figure out what's wrong
 * Mass archive extraction
 * Figure out .IA format. The first 10 bytes seem to be an identical header
-* Show extract files flush right instead of in console

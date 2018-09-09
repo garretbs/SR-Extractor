@@ -6,24 +6,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Drawing;
-// using System.ComponentModel;
-// using System.Drawing;
-// using System.Windows.Forms;
-
-
-/*
-public class SR_Form : Form{
-
-	public SR_Form(){
-		this.AllowDrop = true;
-	}
-
-	public static void Main(){
-		Application.EnableVisualStyles();
-		Application.Run(new SR_Form());
-	}
-}
-*/
+using System.ComponentModel;
 
 public enum Formats {None, WAV, ICO, PNG, Other};
 
@@ -65,7 +48,7 @@ public class SR_SubFile{
 	}
 
 	public void Output(FileStream headerFile, string directory){
-		System.Console.WriteLine("Extracting " + this.filename + "...");
+		//System.Console.WriteLine("Extracting " + this.filename + "...");
 		FileStream file = new FileStream(directory+this.filename, FileMode.CreateNew);
 		int bytesToRead = (int) this.size;
 		byte[] buffer = new byte[1024];
@@ -143,6 +126,9 @@ public class SR_Extractor : Form{
 	
 	private Label filename;
 	private string selectedArchive;
+	//private TextBox fileList;
+	private ListBox fileList;
+	private BindingList<string> filenameList;
 	
 	public SR_Extractor(){
 		Text = "SR Archive Extractor";
@@ -151,13 +137,26 @@ public class SR_Extractor : Form{
 		
 		int baseY = 24;
 		selectedArchive = "";
-		
+		filenameList = new BindingList<string>();
+		fileList = new ListBox();
+		fileList.Size = new Size(this.Size.Width>>1, this.Size.Height-(baseY*4));
+		fileList.Dock = DockStyle.Right;
+		fileList.Parent = this;
+		fileList.DataSource = filenameList;
+		fileList.SelectionMode = SelectionMode.None;
+		/*
+		fileList = new TextBox();
+		fileList.Parent = this;
+		fileList.Multiline = true;
+		//fileList.Size = new Size(this.Size.Width>>1, this.Size.Height-(baseY*4));
+		fileList.Dock = DockStyle.Right;
+		fileList.ReadOnly = true;
+		*/
 		
 		MainMenu menu = new MainMenu();
 		menu.MenuItems.Add(new MenuItem("Open File", new EventHandler(this.openFile), Shortcut.CtrlO));
 		//file.MenuItems.Add();
 		Menu = menu;
-		
 		
 		filename = new Label();
 		filename.Text = "(No file selected)";
@@ -241,19 +240,25 @@ public class SR_Extractor : Form{
 				}
 			}
 			
+			
 			FileStream headerFile = new FileStream(selectedArchive, FileMode.Open, FileAccess.Read);
 			//headerFile.Seek(srHeader.rawOffset, SeekOrigin.Begin);
+			filenameList.Clear();
 			foreach(var srFile in subFiles){
-				//System.Console.WriteLine(srFile.filename);
+				System.Console.WriteLine(srFile.filename);
 				headerFile.Seek(srHeader.rawOffset+srFile.offset, SeekOrigin.Begin); //shouldn't be necessary
 				srFile.Output(headerFile, dir);
-				
+				filenameList.Add(srFile.filename);
+				fileList.TopIndex = fileList.Items.Count-1;
 			}
+			filenameList.Add(" ");
+			filenameList.Add("Done!");
+			fileList.TopIndex = fileList.Items.Count-1;
 			headerFile.Close();
-			Console.WriteLine("Done!");
+			//Console.WriteLine("Done!");
 			System.Media.SystemSounds.Beep.Play();
 		}else{
-			System.Media.SystemSounds.Beep.Play();
+			System.Media.SystemSounds.Hand.Play();
 		}
 	}
 	
@@ -266,5 +271,6 @@ public class SR_Extractor : Form{
 	}
 }
 
-//todo: turn into gui
-//have custom icon for funsies?
+//todo: separate threading so list updates with each file
+//progress bar?
+//verify if file is actually an sr archive file
