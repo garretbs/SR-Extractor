@@ -4,6 +4,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using System.Drawing;
 // using System.ComponentModel;
 // using System.Drawing;
 // using System.Windows.Forms;
@@ -123,61 +125,146 @@ public class SR_SubFile{
 }
 
 public class SR_Header{
-	int numFiles;
-	int always80;
-	int rawOffset;
+	public int numFiles;
+	public int always80;
+	public int rawOffset;
+	
 	public SR_Header(){
 	}
-
+	
 	public void SetInfo(string[] headerInfo){
 		this.numFiles = Int32.Parse(headerInfo[0]);
 		this.always80 = Int32.Parse(headerInfo[1]);
 		this.rawOffset = Int32.Parse(headerInfo[2]);
 	}
+}
+
+public class SR_Extractor : Form{
+	
+	private Label filename;
+	private string selectedArchive;
+	
+	public SR_Extractor(){
+		Text = "SR Archive Extractor";
+		Size = new Size(480, 360);
+		CenterToScreen();
+		
+		int baseY = 24;
+		selectedArchive = "";
+		
+		
+		MainMenu menu = new MainMenu();
+		menu.MenuItems.Add(new MenuItem("Open File", new EventHandler(this.openFile), Shortcut.CtrlO));
+		//file.MenuItems.Add();
+		Menu = menu;
+		
+		
+		filename = new Label();
+		filename.Text = "(No file selected)";
+		filename.Size = new Size(128, 24);
+		filename.Location = new Point(0, baseY>>1);
+		filename.Parent = this;
+		
+		/*
+		TextBox srFileList = new TextBox();
+		srFileList.Parent = this;
+		srFileList.Location = new Point(0, baseY);
+		srFileList.ReadOnly = true;
+		*/
+		
+		Button extractButton = new Button();
+		extractButton.Text = "Extract archive";
+		extractButton.Size = new Size(128, 24);
+		extractButton.Location = new Point(0, baseY*2);
+		//extractButton.Anchor = AnchorStyles.Left;
+		extractButton.Click += new EventHandler(extractClick);
+		extractButton.Parent = this;
+		Controls.Add(extractButton);
+		
+		Button quitButton = new Button();
+		quitButton.Text = "Quit";
+		quitButton.Size = new Size(64, 24);
+		quitButton.Location = new Point(0, baseY*3);
+		//quitButton.Anchor = AnchorStyles.Left;
+		quitButton.Click += new EventHandler(quitClick);
+		quitButton.Parent = this;
+		Controls.Add(quitButton);
+	}
+	
+	public void openFile(object sender, EventArgs e){
+		OpenFileDialog dialog = new OpenFileDialog();
+		dialog.ShowHelp = true; //necessary or it hangs
+		dialog.Filter = "Sega aRchive files (*.sr) | *.sr";
+		
+		if(dialog.ShowDialog(this) == DialogResult.OK){
+			filename.Text = dialog.FileName;
+			selectedArchive = dialog.FileName;
+			Console.WriteLine(dialog.FileName);
+			//StreamReader reader = new StreamReader(dialog.FileName);
+			//reader.Close();
+		}
+	}
+
+	public void extractClick(object sender, EventArgs e){
+		//check if archive selected
+		if(selectedArchive != ""){
+			//Console.WriteLine(selectedArchive);
+			int lineNum = 0;
+			bool gotHeader = false;
+			SR_Header srHeader = new SR_Header();
+			string[] headerInfo;
+			List<SR_SubFile> subFiles = new List<SR_SubFile>();
+			
+			if(!File.Exists(selectedArchive)){
+				System.Console.WriteLine("Could not find file "+selectedArchive);
+				return;
+			}
+			
+			string dir = selectedArchive+ " output\\";
+			
+			if(Directory.Exists(dir)){Directory.Delete(dir, true);}
+			Directory.CreateDirectory(dir);
+
+			foreach(var line in File.ReadLines(selectedArchive)){
+				//System.Console.WriteLine(line);
+				lineNum++;
+				if(!gotHeader){
+					headerInfo = Regex.Split(line, @"\s+");
+					//System.Console.WriteLine(string.Join(",", headerInfo));
+					srHeader.SetInfo(headerInfo);
+					gotHeader = true;
+				}else{
+					headerInfo = Regex.Split(line, @"\s+");
+					//System.Console.WriteLine(string.Join(",", headerInfo));
+					subFiles.Add(new SR_SubFile(headerInfo));
+					if(lineNum > srHeader.numFiles) break;
+				}
+			}
+			
+			FileStream headerFile = new FileStream(selectedArchive, FileMode.Open, FileAccess.Read);
+			//headerFile.Seek(srHeader.rawOffset, SeekOrigin.Begin);
+			foreach(var srFile in subFiles){
+				//System.Console.WriteLine(srFile.filename);
+				headerFile.Seek(srHeader.rawOffset+srFile.offset, SeekOrigin.Begin); //shouldn't be necessary
+				srFile.Output(headerFile, dir);
+				
+			}
+			headerFile.Close();
+			Console.WriteLine("Done!");
+			System.Media.SystemSounds.Beep.Play();
+		}else{
+			System.Media.SystemSounds.Beep.Play();
+		}
+	}
+	
+	public void quitClick(object sender, EventArgs e){
+		Close();
+	}
 
 	public static void Main(string[] args){
-		int lineNum = 0;
-		bool gotHeader = false;
-		SR_Header srHeader = new SR_Header();
-		string[] headerInfo;
-		List<SR_SubFile> subFiles = new List<SR_SubFile>();
-		
-		if(!File.Exists(args[0])){
-			System.Console.WriteLine("Could not find file "+args[0]);
-			return;
-		}
-		
-		string dir = args[0]+ " output\\";
-		
-		if(Directory.Exists(dir)){Directory.Delete(dir, true);}
-		Directory.CreateDirectory(dir);
-
-		foreach(var line in File.ReadLines(args[0])){
-			//System.Console.WriteLine(line);
-			lineNum++;
-			if(!gotHeader){
-				headerInfo = Regex.Split(line, @"\s+");
-				//System.Console.WriteLine(string.Join(",", headerInfo));
-				srHeader.SetInfo(headerInfo);
-				gotHeader = true;
-			}else{
-				headerInfo = Regex.Split(line, @"\s+");
-				//System.Console.WriteLine(string.Join(",", headerInfo));
-				subFiles.Add(new SR_SubFile(headerInfo));
-				if(lineNum > srHeader.numFiles) break;
-			}
-		}
-		
-		FileStream headerFile = new FileStream(args[0], FileMode.Open, FileAccess.Read);
-		//headerFile.Seek(srHeader.rawOffset, SeekOrigin.Begin);
-		foreach(var srFile in subFiles){
-			//System.Console.WriteLine(srFile.filename);
-			headerFile.Seek(srHeader.rawOffset+srFile.offset, SeekOrigin.Begin); //shouldn't be necessary
-			srFile.Output(headerFile, dir);
-			
-		}
-		headerFile.Close();
+		Application.Run(new SR_Extractor());
 	}
 }
 
 //todo: turn into gui
+//have custom icon for funsies?
