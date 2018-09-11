@@ -100,7 +100,6 @@ Now we are at the fulcrum of where things get truly interesting. What files will
 * ic_VECTMAN.PNG can be plainly opened in anything that supports PNG images. It's the icon you see in the menu when selecting the game. Given its filename, we can assume that files named ic_*.IA contain icon data.
 * The audio data is curious. It's simply audio data from the game itself, sound effects and music. On the PS2 version, the lowercase .wav files are sound effects, and .WAV in uppercase with a lowercase m in the filename is for music. The PSP version uses .wav for sound effects and .AT3 for music. And a bonus: the music files in the PSP version actually have a higher sampling rate than their PS2 counterparts! They clock in with 44100 Hz, whereas PS2's game music kept it down to 22050 Hz.
 * The file I suspiciously skipped over, VECTMAN.68k.QZ, gives us a clue as to what it is in its filename. 68k is the shorthand for the Motorola 68000, the CPU for the Sega Genesis. .68K is also the file extension for Genesis ROMs as found in [Sega Mega Drive and Genesis Classics](https://store.steampowered.com/app/34270/SEGA_Mega_Drive_and_Genesis_Classics/) on Steam. So presumably these .68k.QZ files are Genesis ROMS, right? Well, probably. Let's dedicate a section to what we'll find.
-* It is worth noting that non-Genesis titles in the collection, such as Altered Beast (arcade) and Super Zaxxon, do not have .68k.QZ files. The former has three files: Charz.rom.qz, Program.rom.qz, and Sprites.rom.qz. The latter has GAMENAME.ROM.
 
 <a name = "68kfiles"></a>
 ### .68k.QZ files
@@ -112,6 +111,7 @@ What's different?
 * Steam files are directly playable in emulator. PS2/PSP files are not.
 * File sizes are different. VECTMAN_UE.68K in Steam comes in at 2048kB. VECTMAN.68k.QZ is only 1026kB. ROMs from Steam are stored in a folder named "uncompressed ROMs," suggesting that the ones in SGC are in fact compressed
 * Steam ROMs include plaintext information in the header. PS2/PSP ROMs are just raw binary.
+* Non-Genesis titles in the collection, such as Altered Beast (arcade) and Super Zaxxon, do not have .68k.QZ files. The former has three files: Charz.rom.qz, Program.rom.qz, and Sprites.rom.qz. The latter has GAMENAME.ROM.
 
 <a name = "executables"></a>
 ## Directly booting the executables
