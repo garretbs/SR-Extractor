@@ -25,13 +25,13 @@ We have the root directory:
 
 ![PS2 version root directory](sgc1.png)
 
-* 0APRP310.IMG is a standard PS2 reset file. Okay, I don't actually know that for sure, but it's a binary .IMG file starting with the string "RESET" that I find in almost every PS2 game I examine.
+* 0APRP310.IMG is a standard PS2 reset file. Okay, I don't actually know that for sure, but it's a binary .IMG file starting with the string "RESET" that I find in every PS2 game I examine.
 * SLUS_215.42 is a standard PS2 ELF executable found in every game. We'll touch more on this later.
 * SYSTEM.CNF contains boot information in plaintext. It points to the above file as the main executable and specifies the region and version of the game.
 * 0B has two important files: SEGA_FFE.SR and SEGA_FW.SR. More on that later.
 * 0CLASSIC has three subfolders representing alphabetical divisions of A-E, F-R, and S-Z. This is where the games' archive files are found. Again, we will return to this.
 * 0VIDEOS has the EXTRAS and OTHER subfolders. The former is a collection of the game's interviews; the latter is for miscellaneous things such as splash logos and the credits. These video files are in .PSS format, the standard for full-motion video on PlayStation 2.
-* The last three folders match what is found in the 0CLASSIC folder. Except, instead of archive files, they are all ELF files! As mentioned before, ELF is the executable for PlayStation. How interesting.
+* The last three folders match what is found in the 0CLASSIC folder. Except, instead of archive files, they are all ELF files! As mentioned before, ELF is the executable format for PlayStation systems. How interesting.
 
 <a name = "pspfolders"></a>
 ### PlayStation Portable
@@ -66,8 +66,8 @@ When I first popped open the PS2 copy of Sega Genesis Collection, I was looking 
 Say, the contents of the SEGA_FFE.SR file look interesting. The beginning of the file is a regular list, with some binary junk after it. It's like some sort of archive. The first number is slightly bigger than the first number from the previous line. The last bit part of a line is obviously a filename. Oh, and the 44100? I recognize that number. It's a standard sampling frequency for audio data. And it's found on the same line as... a .WAV file!
 
 Every .SR file is laid out the same way:
-* First line containing the number of files, the number 80, and the byte offset to the start of the raw data
-* Lines for individual files with the byte offset to the file data, the size of the file in bytes, three special numbers, then the filename. For most files the special numbers are 100 and two 0s. Those don't seem to be useful. For audio files, however, the special numbers represent the number of channels, the sampling frequency, and the bit depth. The data in the header of .SR archive contains information that should go in the header of a .WAV file.
+* First line containing the number of files, the number 80, and the byte offset to the start of the raw data. All in plaintext
+* Lines for individual files with the byte offset to the file data, the size of the file in bytes, three special numbers, then the filename. Again, this all in plaintext. For most files the special numbers are 100 and two 0s. Those don't seem to be useful. For audio files, however, the special numbers represent the number of channels, the sampling frequency, and the bit depth. The data in the header of .SR archive contains information that should go in the header of a .WAV file.
 
 <a name = "filesinarchives"></a>
 ## Files within .SR archives
@@ -77,15 +77,15 @@ Every .SR file is laid out the same way:
 
 * The .WAV files are just the sounds you here when moving around in the menus.
 * Presumably, the .IA files are icon graphics for the PS2 controller's buttons, though I haven't been able to figure out its header to find more information. They all share the same first few characters
-* There various files without an extension (the file list was too large to be shown here). These have that same ELF header yet again. Curiously, trying to boot them individually in PCSX2 causes a memory error.
-* The PSP version's SEGA_FW.SR has mostly the same contents. The "ps2_*.ia" files instead have "psp_*.ia" filenames. The extensionless ELF files are missing as well.
+* There are various files without an extension (the file list was too large to be shown here). These have that same ELF header yet again. Curiously, trying to boot them individually in PCSX2 causes a memory error.
+* The PSP version's SEGA_FW.SR has mostly the same contents. The "ps2_.ia" files instead have "psp_.ia" filenames. The extension-less ELF files are missing as well.
 
 ![SEGA_FFE.SR contents (PS2)](sgc2.png)
 
 SEGA_FFE.SR contains the real meat. Finally, we begin to see some insight into how this collection really runs.
 
 * BG.M2V is a video file. It is what appears in the background of the menus. It's just a small looping blue background. In the PSP version, it uses the .PMF format.
-* There are various .SWF files representing the menus. That's right, the interactive menus are just flash files being played on PS2.
+* There are various .SWF files representing the menus. That's right, the interactive menus are just flash files being played on the console.
 * There are multiple .IA files per game here. I do not believe it is data from the games themselves, but rather metadata for the collection. The menus show text detailing the background behind the games' history.
 * The awesome menu music is found here in .WAV format. It even loops perfectly. In the PSP version, it is .AT3. That was the standard audio format for portable Sony devices.
 * The PSP version has .SWF files pertaining to its custom menus, such as multiplayer connectivity.
@@ -128,7 +128,7 @@ Oh. It fails to find the files it needs. I am not sure if this is reflective of 
 ## Some last things
 I've dumped a lot of information on you so far. The payoff is soon. We just have some miscellaneous last bits of evidence to examine.
 
-* Unique to the PS2/PSP collection are weird audio issues. These aren't simple glitches. When you get speed shoes in the two Sonic games, the music does not speed up like it should. The special stage music doesn't play at all. Some sound effects in Ristar are completely different from what they should be. Other Genesis compilation releases have no unique game glitches that I know of
+* Unique to the PS2/PSP collection are weird audio issues. These aren't simple glitches. When you get speed shoes in the two Sonic games, the music does not speed up like it should. The special stage music doesn't play at all. Some sound effects in Ristar are completely different from what they should be. Other Genesis compilation releases have no unique game glitches that I know of.
 * Sonic the Hedgehog 3 is mysteriously absent in the PS2/PSP versions, but not the PS3 version. Note that Sonic 3 (& Knuckles) has notorious legal issues that prevent it from being released with alterations in any way. It only appears in forms of raw emulation. Pick any rerelease including Sonic 3, and you will find that it is 1:1 with the original game. Pick any rerelease compilation with some new features—3D Genesis titles on 3DS, Sega Genesis Classics with online functionality on PS4/XB1/PC—and Sonic 3 will be missing.
 
 And to review:
