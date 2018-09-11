@@ -105,13 +105,12 @@ Now we are at the fulcrum of where things get truly interesting. What files will
 ### .68k.QZ files
 These are most likely Genesis ROMs. What do they have in common?
 * Similar naming scheme. Vectorman is named VECTMAN in both Sega Genesis Classics and the Steam version
-* 68k in filename
+* 68k in filename. Non-Genesis titles in the collection, such as Altered Beast (arcade) and Super Zaxxon, do not have .68k.QZ files. The former has three files: Charz.rom.qz, Program.rom.qz, and Sprites.rom.qz. The latter has GAMENAME.ROM.
 
 What's different?
 * Steam files are directly playable in emulator. PS2/PSP files are not.
 * File sizes are different. VECTMAN_UE.68K in Steam comes in at 2048kB. VECTMAN.68k.QZ is only 1026kB. ROMs from Steam are stored in a folder named "uncompressed ROMs," suggesting that the ones in SGC are in fact compressed
 * Steam ROMs include plaintext information in the header. PS2/PSP ROMs are just raw binary.
-* Non-Genesis titles in the collection, such as Altered Beast (arcade) and Super Zaxxon, do not have .68k.QZ files. The former has three files: Charz.rom.qz, Program.rom.qz, and Sprites.rom.qz. The latter has GAMENAME.ROM.
 
 <a name = "executables"></a>
 ## Directly booting the executables
