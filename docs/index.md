@@ -98,7 +98,8 @@ Now we are at the fulcrum of where things get truly interesting. What files will
 ![VECTMAN.SR contents (PS2)](sgc4.png)
 
 * ic_VECTMAN.PNG can be plainly opened in anything that supports PNG images. It's the icon you see in the menu when selecting the game. Given its filename, we can assume that files named ic_*.IA contain icon data.
-* The audio data is curious. It's simply audio data from the game itself, sound effects and music. On the PS2 version, the lowercase .wav files are sound effects, and .WAV in uppercase with a lowercase m in the filename is for music. The PSP version uses .wav for sound effects and .AT3 for music. And a bonus: the music files in the PSP version actually have a higher sampling rate than their PS2 counterparts! They clock in with 44100 Hz, whereas PS2's game music kept it down to 22050 Hz.
+* The audio data is curious. It's simply audio data from the game itself, sound effects and music. On the PS2 version, the lowercase .wav files are sound effects, and .WAV in uppercase with a lowercase m in the filename is for music. The PSP version uses .wav for sound effects and .AT3 for music. And a bonus: the music files in the PSP version actually have a higher sampling rate than their PS2 counterparts! They clock in with 44100 Hz, whereas PS2's game music kept it down to 22050 Hz. However, the PSP filesize is lower due to using a compressed format.
+* Another note about the music files. Certain tracks are separated into two files: one for the prelude, and one that loops perfectly. This was most likely done because the the audio could not play part of one track once before looping another part.
 * The file I suspiciously skipped over, VECTMAN.68k.QZ, gives us a clue as to what it is in its filename. 68k is the shorthand for the Motorola 68000, the CPU for the Sega Genesis. .68K is also the file extension for Genesis ROMs as found in [Sega Mega Drive and Genesis Classics](https://store.steampowered.com/app/34270/SEGA_Mega_Drive_and_Genesis_Classics/) on Steam. So presumably these .68k.QZ files are Genesis ROMS, right? Well, probably. Let's dedicate a section to what we'll find.
 
 <a name = "68kfiles"></a>
@@ -128,7 +129,7 @@ Oh. It fails to find the files it needs. I am not sure if this is reflective of 
 ## Some last things
 I've dumped a lot of information on you so far. The payoff is soon. We just have some miscellaneous last bits of evidence to examine.
 
-* Unique to the PS2/PSP collection are weird audio issues. These aren't simple glitches. When you get speed shoes in the two Sonic games, the music does not speed up like it should. The special stage music doesn't play at all. Some sound effects in Ristar are completely different from what they should be. Other Genesis compilation releases have no unique game glitches that I know of.
+* Unique to the PS2/PSP collection are weird audio and graphical issues. These aren't simple glitches. When you get speed shoes in the two Sonic games, the music does not speed up like it should. The special stage music doesn't play at all. Some sound effects in Ristar are completely different from what they should be. Other Genesis compilation releases have no unique game glitches that I know of.
 * Sonic the Hedgehog 3 is mysteriously absent in the PS2/PSP versions, but not the PS3 version. Note that Sonic 3 (& Knuckles) has notorious legal issues that prevent it from being released with alterations in any way. It only appears in forms of raw emulation. Pick any rerelease including Sonic 3, and you will find that it is 1:1 with the original game. Pick any rerelease compilation with some new features—3D Genesis titles on 3DS, Sega Genesis Classics with online functionality on PS4/XB1/PC—and Sonic 3 will be missing.
 
 And to review:
@@ -146,10 +147,13 @@ I can only guess. Perhaps it was an easier way of implementing the hidden games'
 
 <a name = "areyousure"></a>
 ### Are you certain it was done that way?
-Well, no. I did not work on the game myself, so I could be wrong. The collection still seems to include redundant ROMs, but I have yet to make them work in an emulator. Still, a game playing the wrong music as a result of an emulator glitch is infinitesimally unlikely, especially when you consider the games' audio files are stored in modern formats unknown to the Genesis.
+Well, no. I did not work on the game myself, so I could be wrong. There are some tests for this theory. The easiest would be to swap audio offsets to see if different music played. Another would be to crack open the other asset files and do some rearranging with graphics. Unfortunately, I cannot get the game to boot after modifying its files this way.
+
+The collection still seems to include ROMs that are redundant if I am right, but I have yet to make them work in an emulator. Still, a game playing the wrong music as a result of an emulator glitch is infinitesimally unlikely, especially when you consider the games' audio files are stored in modern formats unknown to the Genesis. It is possible that it is simply the asset files being managed independently of the game, or that they are being run at some middle ground between emulation and a ground-up remake. I find this unlikely given that games of this era had all of their code and assets coupled.
 
 <a name = "summary"></a>
 ## Summary
 * PS2/PSP versions are mostly the same game with only platform-specific alterations file formats. PS3 version is essentially different software.
-* Games on PS2/PSP are run natively rather than emulated, have their audio files stored in .WAV and .AT3 formats
+* Games on PS2/PSP are run natively rather than emulated, have their audio files stored in .WAV and .AT3 formats. A music track is split into two files for the prelude, which plays once, and the main looping section.
 * Menus are .SWF files played on top of looping video
+
